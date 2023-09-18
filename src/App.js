@@ -1,14 +1,37 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import AddressBook from './components/AddressBook/AddressBook';
+import NavigationBar from './components/NavigationBar/NavigationBar';
+import WishList from './components/WishList/WishList';
+import Home from './components/Home/Home';
+import {createBrowserRouter, RouterProvider} from 'react-router-dom';
+
+const router = createBrowserRouter(
+  [
+    {
+      element: <NavigationBar />,
+      children: [
+        {
+          path: "/",
+          element: <Home />
+        },
+        {
+          path: "/address-book",
+          element: <AddressBook />
+        },
+        {
+          path: "/wish-list",
+          element: <WishList />
+        }
+      ]
+    }
+  ]
+)
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <h1>Hello from V2</h1>
-      </header>
+    <div>
+      <RouterProvider router={router} />
     </div>
   );
 }

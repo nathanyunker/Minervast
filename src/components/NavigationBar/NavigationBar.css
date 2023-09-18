@@ -1,0 +1,8 @@
+.navigational-link {
+    color: #FFF;
+    text-decoration: none;
+  }
+.navigational-link:hover {
+    color: rgb(106, 112, 189);
+    text-decoration: none;
+}
