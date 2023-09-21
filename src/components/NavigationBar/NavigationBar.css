@@ -1,8 +1,20 @@
+.navigational-brand {
+  font-family: 'Droid Sans';
+  font-size: 32px;
+  padding-right: 50px;
+}
+.navigational-link-container {
+  text-align: center;
+  padding-top:7px;
+}
 .navigational-link {
-    color: #FFF;
-    text-decoration: none;
-  }
+  color: #FFF;
+  text-decoration: none;
+  font-family: 'Chilanka';
+  font-size: 20px;
+  padding-right:50px;
+}
 .navigational-link:hover {
-    color: rgb(106, 112, 189);
-    text-decoration: none;
+  color: rgb(106, 112, 189);
+  text-decoration: none;
 }

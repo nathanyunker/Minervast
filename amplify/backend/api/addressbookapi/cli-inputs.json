@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "paths": {
+    "/address-book": {
+      "name": "/address-book",
+      "lambdaFunction": "addressBook",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}

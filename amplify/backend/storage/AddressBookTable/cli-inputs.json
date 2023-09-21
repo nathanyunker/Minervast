@@ -1,0 +1,14 @@
+{
+  "resourceName": "AddressBookTable",
+  "tableName": "AddressBookTable",
+  "partitionKey": {
+    "fieldName": "pk",
+    "fieldType": "string"
+  },
+  "sortKey": {
+    "fieldName": "sk",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": []
+}

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import WebFont from 'webfontloader';
 import Image from 'react-bootstrap/Image';
 import './Home.css';
 
@@ -20,12 +21,21 @@ const Home = () => {
            });
      }, [])
 
+     useEffect(() => {
+        WebFont.load({
+          google: {
+            families: ['Croissant One, Mukta']
+          }
+        });
+       }, []);
+
     return (
-        <div>
-            <h1>This will be your home page.... maybe put some todo's or something</h1>
-            <Image className="pod-pic" src={pod.url} rounded />
-            <div> {pod.title} </div>
-            <div> {pod.explanation} </div>
+        <div className='home-container'>
+            <div className="pod-pic-container">
+                <Image className="pod-pic" src={pod.url} rounded />
+            </div>
+            <div className="pod-title"> {pod.title} </div>
+            <div className="pod-desc"> {pod.explanation} </div>
         </div>
     );
 }

@@ -1,0 +1,29 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-amplifyadd2a24a74dd4-staging-54035-authRole",
+      "UnauthRoleArn": "arn:aws:iam::141554425372:role/amplify-amplifyadd2a24a74dd4-staging-54035-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::141554425372:role/amplify-amplifyadd2a24a74dd4-staging-54035-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-amplifyadd2a24a74dd4-staging-54035-deployment",
+      "UnauthRoleName": "amplify-amplifyadd2a24a74dd4-staging-54035-unauthRole",
+      "StackName": "amplify-amplifyadd2a24a74dd4-staging-54035",
+      "StackId": "arn:aws:cloudformation:us-east-1:141554425372:stack/amplify-amplifyadd2a24a74dd4-staging-54035/e3e93f90-55e5-11ee-9904-0a53c0683841",
+      "AmplifyAppId": "d1d9axiojt1whe"
+    },
+    "categories": {
+      "function": {
+        "addressBook": {
+          "deploymentBucketName": "amplify-amplifyadd2a24a74dd4-staging-54035-deployment",
+          "s3Key": "amplify-builds/addressBook-38474871666b336c6432-build.zip"
+        }
+      },
+      "storage": {
+        "AddressBookTable": {}
+      },
+      "api": {
+        "addressbookapi": {}
+      }
+    }
+  }
+}

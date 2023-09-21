@@ -1,3 +1,25 @@
+.home-container {
+    background-color: rgb(2, 2, 20);
+    height: 100%;
+}
+
 .pod-pic {
     max-height: 500px;
+}
+
+.pod-pic-container {
+    padding-top: 2em;
+    text-align: center;
+}
+
+.pod-title {
+    font-family: "Croissant One";
+    padding-left: 2em;
+    color: white;
+}
+
+.pod-desc {
+    font-family: "Mukta";
+    padding: 0 2em 0 2em;
+    color: white;
 }
