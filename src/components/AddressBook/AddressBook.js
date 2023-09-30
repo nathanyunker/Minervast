@@ -1,4 +1,5 @@
 import { API } from 'aws-amplify';
+import { useEffect } from 'react';
 
 const AddressBook = () => {
   useEffect(() => {
@@ -6,6 +7,7 @@ const AddressBook = () => {
     API.get('addressbookapi', '/address-book', {}).then(result => {
       console.log('-----GOT ADDRESSESS-----', result.body);
       this.addresses = JSON.parse(result.body);
+      console.log('----addresses----',addresses);
     }).catch(err => {
       console.log('--------UH OH, GOT AN ERROR-----');
       console.log(err);
