@@ -1,5 +1,5 @@
-import { API } from 'aws-amplify';
 import { useEffect } from 'react';
+import { API } from 'aws-amplify';
 
 const AddressBook = () => {
   useEffect(() => {
