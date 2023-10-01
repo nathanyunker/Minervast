@@ -6,8 +6,8 @@ const AddressBook = () => {
     console.log('-----GOING TO GET ADDRESSESS-----');
     API.get('addressbookapi', '/address-book', {}).then(result => {
       console.log('-----GOT ADDRESSESS-----', result.body);
-      this.addresses = JSON.parse(result.body);
-      console.log('----addresses----',addresses);
+      const addresses = JSON.parse(result.body);
+      console.log('----addresses----', addresses);
     }).catch(err => {
       console.log('--------UH OH, GOT AN ERROR-----');
       console.log(err);
