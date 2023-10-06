@@ -4,6 +4,7 @@ import awsconfig from '../../aws-exports';
 
 Amplify.configure(awsconfig);
 
+
 const AddressBook = () => {
   useEffect(() => {
     console.log('-----GOING TO GET ADDRESSESS-----');
