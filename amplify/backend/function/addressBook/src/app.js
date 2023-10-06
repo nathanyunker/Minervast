@@ -63,19 +63,23 @@ const convertUrlType = (param, type) => {
 
 app.get(path, async function(req, res) {
   console.log('---------------get path to scan----------');
+  console.log('--------------here is a uuid----------', uuidv4());
 
   var params = {
     TableName: tableName,
     Select: 'ALL_ATTRIBUTES',
   };
 
+  console.log('-----Why are we getting nothing past this------');
+  console.log('-----The scan is timing out the lambda??------');
   try {
-    console.log('---------------getting data----------', data);
+    console.log('---------------getting data----------');
 
     const data = await ddbDocClient.send(new ScanCommand(params));
     console.log('---------------got data----------', data);
     res.json(data.Items);
   } catch (err) {
+    console.log('------------WAIT--... THIS HAS AN ERROR HUH------', err);
     res.statusCode = 500;
     res.json({error: 'Could not load items: ' + err.message});
   }
