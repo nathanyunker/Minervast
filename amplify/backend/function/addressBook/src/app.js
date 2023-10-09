@@ -62,24 +62,27 @@ const convertUrlType = (param, type) => {
 ************************************/
 
 app.get(path, async function(req, res) {
-  console.log('---------------get path to scan----------');
-  console.log('--------------here is a uuid----------', uuidv4());
+  console.log('---------------Querying for users address book entries---------');
 
-  var params = {
+  // TODO Update once we have real user ids
+  let queryParams = {
     TableName: tableName,
-    Select: 'ALL_ATTRIBUTES',
-  };
+    KeyConditionExpression: "#pk = :pk AND begins_with(#sk, :sk)",
+    ExpressionAttributeNames:{
+      "#pk": "pk",
+      "#sk": 'sk'
+    },
+    ExpressionAttributeValues: {
+      ":pk": "user123-addressBookEntry",
+      ":sk": "user123-addressBookEntry",
+    },
+  }
 
-  console.log('-----Why are we getting nothing past this------');
-  console.log('-----The scan is timing out the lambda??------');
   try {
-    console.log('---------------getting data----------');
-
-    const data = await ddbDocClient.send(new ScanCommand(params));
+    const data = await ddbDocClient.send(new QueryCommand(queryParams));
     console.log('---------------got data----------', data);
     res.json(data.Items);
   } catch (err) {
-    console.log('------------WAIT--... THIS HAS AN ERROR HUH------', err);
     res.statusCode = 500;
     res.json({error: 'Could not load items: ' + err.message});
   }
@@ -195,17 +198,39 @@ app.put(path, async function(req, res) {
 *************************************/
 
 app.post(path, async function(req, res) {
-
-  if (userIdPresent) {
-    req.body['userId'] = req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
-  }
-
-  let putItemParams = {
-    TableName: tableName,
-    Item: req.body
-  }
   try {
+    console.log('---------ENTERED OUR POST-------------', req);
+
+    if (userIdPresent) {
+      req.body['userId'] = req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
+    }
+
+    if (!req.body.title || !req.body.text) {
+      console.log('---------got a bad request here-------------', req.body);
+      throw new Error("Bad Request");
+    }
+
+    const newAddressId = uuidv4();
+
+    // update when we have user ids to include in dynamo object
+    const dynamoAddressEntry = {
+      pk: `user123-addressBookEntry`,
+      sk: `user123-addressBookEntry${newAddressId}`,
+      attrs: {
+        id: newAddressId,
+        title: req.body.title,
+        text: req.body.text
+      }
+    }
+
+
+    let putItemParams = {
+      TableName: tableName,
+      Item: dynamoAddressEntry
+    }
+
     let data = await ddbDocClient.send(new PutCommand(putItemParams));
+    console.log('---------Hooray we got a success-------------', data);
     res.json({ success: 'post call succeed!', url: req.url, data: data })
   } catch (err) {
     res.statusCode = 500;
@@ -217,26 +242,39 @@ app.post(path, async function(req, res) {
 * HTTP remove method to delete object *
 ***************************************/
 
-app.delete(path + '/object' + hashKeyPath + sortKeyPath, async function(req, res) {
+app.delete(path, async function(req, res) {
+//app.delete(path + '/object' + hashKeyPath + sortKeyPath, async function(req, res) {
   const params = {};
-  if (userIdPresent && req.apiGateway) {
-    params[partitionKeyName] = req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
-  } else {
-    params[partitionKeyName] = req.params[partitionKeyName];
-     try {
-      params[partitionKeyName] = convertUrlType(req.params[partitionKeyName], partitionKeyType);
-    } catch(err) {
-      res.statusCode = 500;
-      res.json({error: 'Wrong column type ' + err});
-    }
-  }
-  if (hasSortKey) {
-    try {
-      params[sortKeyName] = convertUrlType(req.params[sortKeyName], sortKeyType);
-    } catch(err) {
-      res.statusCode = 500;
-      res.json({error: 'Wrong column type ' + err});
-    }
+  // if (userIdPresent && req.apiGateway) {
+  //   params[partitionKeyName] = req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
+  // } else {
+  //   params[partitionKeyName] = req.params[partitionKeyName];
+  //    try {
+  //     params[partitionKeyName] = convertUrlType(req.params[partitionKeyName], partitionKeyType);
+  //   } catch(err) {
+  //     res.statusCode = 500;
+  //     res.json({error: 'Wrong column type ' + err});
+  //   }
+  // }
+  // if (hasSortKey) {
+  //   try {
+  //     params[sortKeyName] = convertUrlType(req.params[sortKeyName], sortKeyType);
+  //   } catch(err) {
+  //     res.statusCode = 500;
+  //     res.json({error: 'Wrong column type ' + err});
+  //   }
+  // }
+  
+  console.log('---------Got our delete request---------', req.params);
+  console.log('---------The request--query ?-------', req.query);
+  console.log('---------The request---------', req);
+
+  // TODO replace this hard coded user id
+  params[partitionKeyName] = convertUrlType(`user123-addressBookEntry`, partitionKeyType);
+  params[sortKeyName] = convertUrlType(`user123-addressBookEntry${req.query['addressId']}`, sortKeyType);
+
+  if (!params.pk) {
+    throw new Error("Bad Request");
   }
 
   let removeItemParams = {
@@ -244,10 +282,15 @@ app.delete(path + '/object' + hashKeyPath + sortKeyPath, async function(req, res
     Key: params
   }
 
+  console.log('-------------removeItemParams-------', removeItemParams)
+
   try {
     let data = await ddbDocClient.send(new DeleteCommand(removeItemParams));
+    console.log('-------GOT A SUCCESS-------');
+
     res.json({url: req.url, data: data});
   } catch (err) {
+    console.log('-------GOT AN ERROR-------', err);
     res.statusCode = 500;
     res.json({error: err, url: req.url});
   }

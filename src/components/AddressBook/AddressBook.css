@@ -1,0 +1,21 @@
+.add-address-button {
+    padding: 1em 7em 1em 1em;
+    text-align: right;
+}
+
+.centered-table-cell {
+    width: 10%;
+    text-align: center;
+}
+
+.address-title-table-cell {
+    width: 30%;
+}
+
+.address-text-table-cell {
+    width: 50%;
+}
+
+.address-list-table {
+    padding: 0em 2em 0em 2em;
+}

@@ -20,7 +20,7 @@ const NavigationBar = () => {
     <>
     <Navbar bg="dark" variant='dark'>
         <Container >
-            <Navbar.Brand className="navigational-brand" href="#home">Minverast</Navbar.Brand>
+            <Navbar.Brand className="navigational-brand" href="#home">Minervast</Navbar.Brand>
             <Nav className="me-auto navigational-link-container">
               <Nav.Link>
                 <Link className="navigational-link" to={"/"}>
