@@ -1,10 +1,16 @@
 import React from 'react';
 import './App.css';
+import { Amplify } from 'aws-amplify';
+import { withAuthenticator } from '@aws-amplify/ui-react';
 import AddressBook from './components/AddressBook/AddressBook';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import WishList from './components/WishList/WishList';
 import Home from './components/Home/Home';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
+import '@aws-amplify/ui-react/styles.css';
+
+import awsExports from './aws-exports';
+Amplify.configure(awsExports);
 
 const router = createBrowserRouter(
   [
@@ -28,7 +34,7 @@ const router = createBrowserRouter(
   ]
 )
 
-function App() {
+function App({ signOut, user }) {
   return (
     <div>
       <RouterProvider router={router} />
@@ -36,4 +42,4 @@ function App() {
   );
 }
 
-export default App;
+export default withAuthenticator(App);

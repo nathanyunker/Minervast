@@ -16,6 +16,42 @@ const awsmobile = {
             "endpoint": "https://64395dhxv3.execute-api.us-east-1.amazonaws.com/staging",
             "region": "us-east-1"
         }
+    ],
+    "aws_cognito_identity_pool_id": "us-east-1:473e7791-cfb8-4752-836e-cd45dce64463",
+    "aws_cognito_region": "us-east-1",
+    "aws_user_pools_id": "us-east-1_yZ7rp9eFa",
+    "aws_user_pools_web_client_id": "29gtsbe67d8kpqj3fobea6kv4t",
+    "oauth": {
+        "domain": "minervast09c14b3d-09c14b3d-staging.auth.us-east-1.amazoncognito.com",
+        "scope": [
+            "phone",
+            "email",
+            "openid",
+            "profile",
+            "aws.cognito.signin.user.admin"
+        ],
+        "redirectSignIn": "http://localhost:3000/",
+        "redirectSignOut": "http://localhost:3000/",
+        "responseType": "code"
+    },
+    "federationTarget": "COGNITO_USER_POOLS",
+    "aws_cognito_username_attributes": [
+        "EMAIL"
+    ],
+    "aws_cognito_social_providers": [],
+    "aws_cognito_signup_attributes": [
+        "EMAIL"
+    ],
+    "aws_cognito_mfa_configuration": "OFF",
+    "aws_cognito_mfa_types": [
+        "SMS"
+    ],
+    "aws_cognito_password_protection_settings": {
+        "passwordPolicyMinLength": 8,
+        "passwordPolicyCharacters": []
+    },
+    "aws_cognito_verification_mechanisms": [
+        "EMAIL"
     ]
 };
 

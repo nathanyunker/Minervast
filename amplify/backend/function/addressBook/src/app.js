@@ -16,6 +16,8 @@ const express = require('express')
 
 const { v4: uuidv4 } = require('uuid')
 
+const axios = require('axios');
+
 const ddbClient = new DynamoDBClient({ region: process.env.TABLE_REGION });
 const ddbDocClient = DynamoDBDocumentClient.from(ddbClient);
 
@@ -64,6 +66,9 @@ const convertUrlType = (param, type) => {
 app.get(path, async function(req, res) {
   console.log('---------------Querying for users address book entries---------');
 
+  const user = await authentication(req);
+  const { Username: userId } = user;
+
   // TODO Update once we have real user ids
   let queryParams = {
     TableName: tableName,
@@ -73,8 +78,8 @@ app.get(path, async function(req, res) {
       "#sk": 'sk'
     },
     ExpressionAttributeValues: {
-      ":pk": "user123-addressBookEntry",
-      ":sk": "user123-addressBookEntry",
+      ":pk": `user${userId}-addressBookEntry`,
+      ":sk": `user${userId}-addressBookEntry`,
     },
   }
 
@@ -87,6 +92,40 @@ app.get(path, async function(req, res) {
     res.json({error: 'Could not load items: ' + err.message});
   }
 });
+
+// TODO move this to it's own component
+const authentication = async (req) => {
+  console.log('----------------DOES IT HAVE A TOKEN----', req.headers);
+  console.log('----------------DOES IT HAVE A TOKEN----', req.authorization);
+  const COGNITO_URL = `https://cognito-idp.us-east-1.amazonaws.com/`;
+
+  try {
+      const accessToken = req.headers.authorization.split(" ")[1];
+
+      const { data } = await axios.post(
+          COGNITO_URL,
+          {
+              AccessToken: accessToken
+          },
+          {
+              headers: {
+                  "Content-Type": "application/x-amz-json-1.1",
+                  "X-Amz-Target": "AWSCognitoIdentityProviderService.GetUser"
+              }
+          }
+      )
+
+    console.log('---------What is goin on----------');
+
+      req.user = data;
+      return data;
+  } catch (error) {
+    console.log('---------WHAT IS OUR ERROR----------');
+
+    console.log('---------WHAT IS OUR ERROR----------', error);
+    throw new Error("return a 401 here");
+  }
+};
 
 /************************************
  * HTTP Get method to query objects *
@@ -200,7 +239,12 @@ app.put(path, async function(req, res) {
 app.post(path, async function(req, res) {
   try {
     console.log('---------ENTERED OUR POST-------------', req);
+    console.log('--------req.apiGateway.event.requestContext.identity.cognitoIdentityId-------------', req.apiGateway.event.requestContext.identity.cognitoIdentityId);
 
+    const user = await authentication(req);
+    console.log('-------ANY THING----', user);
+    const { Username: userId } = user;
+    console.log('-----userId----', userId);
     if (userIdPresent) {
       req.body['userId'] = req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
     }
@@ -210,14 +254,21 @@ app.post(path, async function(req, res) {
       throw new Error("Bad Request");
     }
 
-    const newAddressId = uuidv4();
+    let addressId;
+    const existingAddressId = req.query['addressId'];
+
+    if (existingAddressId) {
+      addressId = existingAddressId;
+    } else {
+      addressId = uuidv4();
+    }
 
     // update when we have user ids to include in dynamo object
     const dynamoAddressEntry = {
-      pk: `user123-addressBookEntry`,
-      sk: `user123-addressBookEntry${newAddressId}`,
+      pk: `user${userId}-addressBookEntry`,
+      sk: `user${userId}-addressBookEntry${addressId}`,
       attrs: {
-        id: newAddressId,
+        id: addressId,
         title: req.body.title,
         text: req.body.text
       }
@@ -233,6 +284,7 @@ app.post(path, async function(req, res) {
     console.log('---------Hooray we got a success-------------', data);
     res.json({ success: 'post call succeed!', url: req.url, data: data })
   } catch (err) {
+    console.log('---------Error error--------', err);
     res.statusCode = 500;
     res.json({ error: err, url: req.url, body: req.body });
   }
@@ -269,9 +321,12 @@ app.delete(path, async function(req, res) {
   console.log('---------The request--query ?-------', req.query);
   console.log('---------The request---------', req);
 
+  const user = await authentication(req);
+  const { Username: userId } = user;
+
   // TODO replace this hard coded user id
-  params[partitionKeyName] = convertUrlType(`user123-addressBookEntry`, partitionKeyType);
-  params[sortKeyName] = convertUrlType(`user123-addressBookEntry${req.query['addressId']}`, sortKeyType);
+  params[partitionKeyName] = convertUrlType(`user${userId}-addressBookEntry`, partitionKeyType);
+  params[sortKeyName] = convertUrlType(`user${userId}-addressBookEntry${req.query['addressId']}`, sortKeyType);
 
   if (!params.pk) {
     throw new Error("Bad Request");

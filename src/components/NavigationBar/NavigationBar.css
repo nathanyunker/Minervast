@@ -18,3 +18,8 @@
   color: rgb(106, 112, 189);
   text-decoration: none;
 }
+
+.sign-out {
+  float:right;
+  margin-right: 1em;
+}

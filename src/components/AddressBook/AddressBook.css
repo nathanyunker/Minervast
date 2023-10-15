@@ -1,5 +1,18 @@
+.search-and-add-bar {
+    width: 100%;
+    /* display: inline-block; */
+}
+
+.search-address-bar {
+    width: 80%;
+    padding: 1em 1em 1em 2em;
+    float: left; 
+}
+
 .add-address-button {
-    padding: 1em 7em 1em 1em;
+    width: 20%;
+    padding: 1em 2em 1em 1em;
+    float: right; 
     text-align: right;
 }
 
@@ -9,7 +22,7 @@
 }
 
 .address-title-table-cell {
-    width: 30%;
+    width: 20%;
 }
 
 .address-text-table-cell {

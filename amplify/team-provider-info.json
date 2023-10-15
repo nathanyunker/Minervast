@@ -15,7 +15,7 @@
       "function": {
         "addressBook": {
           "deploymentBucketName": "amplify-amplifyadd2a24a74dd4-staging-54035-deployment",
-          "s3Key": "amplify-builds/addressBook-375277346c51714d6449-build.zip"
+          "s3Key": "amplify-builds/addressBook-6c434630535057475830-build.zip"
         }
       },
       "storage": {
@@ -23,6 +23,9 @@
       },
       "api": {
         "addressbookapi": {}
+      },
+      "auth": {
+        "minervast09c14b3d": {}
       }
     }
   }
